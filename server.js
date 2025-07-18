@@ -8,7 +8,21 @@ const path = require('path');
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+
+// CORS configuration for production
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? [
+        'https://university-frontend-nu.vercel.app',
+        'https://university-frontend-manoj-1222.vercel.app',
+        'https://university-frontend.vercel.app',
+        // Add your actual frontend domain here when deployed
+      ]
+    : ['http://localhost:3000', 'http://localhost:5173'], // Development origins
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(helmet());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
