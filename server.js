@@ -5,6 +5,11 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
+// Load production environment variables if needed
+if (process.env.VERCEL || !process.env.MONGO_URI || !process.env.JWT_SECRET) {
+  require('./config/production-env');
+}
+
 const app = express();
 
 // Trust proxy for Vercel
