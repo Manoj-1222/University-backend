@@ -26,6 +26,7 @@ const corsOptions = {
     'http://localhost:5173',
     'http://localhost:5174',
     'https://university-frontend-chi.vercel.app',
+    'https://university-frontend-tau.vercel.app',
     /\.vercel\.app$/
   ],
   credentials: true,
