@@ -37,16 +37,21 @@ module.exports = (req, res, next) => {
 
     // Verify token
     const decoded = jwt.verify(actualToken, process.env.JWT_SECRET);
-    console.log('Token decoded successfully for user:', decoded.user?.email || 'unknown');
+    console.log('Token decoded successfully:', {
+      userId: decoded.user?.id,
+      email: decoded.user?.email,
+      exp: new Date(decoded.exp * 1000).toISOString()
+    });
 
     // Validate decoded token structure
     if (!decoded.user || !decoded.user.id) {
-      console.log('Invalid token structure - missing user data');
+      console.log('Invalid token structure - missing user data:', decoded);
       return res.status(401).json({ message: 'Invalid token structure' });
     }
 
     // Add user to request
     req.user = decoded.user;
+    console.log('User added to request:', { id: req.user.id, email: req.user.email });
     next();
 
   } catch (err) {

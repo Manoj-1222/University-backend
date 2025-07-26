@@ -68,20 +68,44 @@ exports.getStudentById = async (req, res) => {
 // @desc    Get current student profile
 exports.getProfile = async (req, res) => {
   try {
+    console.log('Profile request - User ID:', req.user?.id);
+    console.log('Profile request - User object:', req.user);
+    
+    // Validate that we have a user ID
+    if (!req.user || !req.user.id) {
+      console.log('No user ID found in request');
+      return res.status(401).json({
+        success: false,
+        message: 'Authentication required - no user ID found'
+      });
+    }
+    
+    // Validate ObjectId format
+    if (!mongoose.Types.ObjectId.isValid(req.user.id)) {
+      console.log('Invalid user ID format:', req.user.id);
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid user ID format'
+      });
+    }
+    
     const student = await Student.findById(req.user.id).select('-password');
     
     if (!student) {
+      console.log('Student not found for ID:', req.user.id);
       return res.status(404).json({
         success: false,
         message: 'Student not found'
       });
     }
     
+    console.log('Profile retrieved successfully for:', student.name);
     res.json({
       success: true,
       data: student
     });
   } catch (error) {
+    console.error('Get profile error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error',

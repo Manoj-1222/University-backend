@@ -14,9 +14,12 @@ const {
 } = require('../controllers/studentController');
 
 // @route   GET /api/students
-// @desc    Get all students (Admin only)
+// @desc    Get all students (Admin only)  
 // @access  Private
 router.get('/', auth, getAllStudents);
+
+// IMPORTANT: All specific routes must come BEFORE the /:id route
+// Otherwise Express will treat them as ID parameters
 
 // @route   GET /api/students/profile
 // @desc    Get current student profile
@@ -27,11 +30,6 @@ router.get('/profile', auth, getProfile);
 // @desc    Update current student profile
 // @access  Private
 router.put('/profile', auth, updateProfile);
-
-// @route   GET /api/students/:id
-// @desc    Get student by ID (Admin only)
-// @access  Private
-router.get('/:id', auth, getStudentById);
 
 // @route   GET /api/students/attendance
 // @desc    Get current student attendance
@@ -57,5 +55,11 @@ router.get('/placement', auth, getPlacementStatus);
 // @desc    Update student placement status
 // @access  Private
 router.put('/placement', auth, updatePlacementStatus);
+
+// @route   GET /api/students/:id
+// @desc    Get student by ID (Admin only)
+// @access  Private
+// IMPORTANT: This route must come LAST as it will match any string as ID
+router.get('/:id', auth, getStudentById);
 
 module.exports = router;
